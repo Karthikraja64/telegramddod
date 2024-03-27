@@ -23,4 +23,4 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |
-          while true; do python bot.py; sleep 5; done
+          while true; do python .github/workflows/bot.py; sleep 5; done
